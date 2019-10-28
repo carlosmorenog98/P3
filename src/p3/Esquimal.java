@@ -5,6 +5,8 @@
  */
 package p3;
 
+import java.util.Comparator;
+
 /**
  *
  * @author moren
@@ -24,17 +26,17 @@ public class Esquimal extends SerVivo
         return masa;
     }
     
-    public boolean comer(int comer)
+    public int comer(int min, int max)
     {
-        int prob = numeroAleatorio(1,1000);                           //Muerte por causas naturales
+        int prob = numeroAleatorio(min,max);                           //Muerte por causas naturales
         
-        if(prob <= comer){
-            return false;
-        }
-        else
-        {
-            return true;
-        }
+        return prob;
     }
     
+    public static Comparator<Esquimal> comparador = new Comparator<Esquimal>() {
+        @Override
+        public int compare(Esquimal e, Esquimal e1) {
+            return (e.getMasa() - e1.getMasa());
+        }
+    };
 }

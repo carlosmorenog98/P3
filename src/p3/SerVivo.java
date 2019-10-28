@@ -33,27 +33,27 @@ public abstract class SerVivo implements Serializable
     
     public boolean reproducirse(int nacer)
     {
-        int prob = numeroAleatorio(1,1000);                           //Muerte por causas naturales
+        int prob = numeroAleatorio(1,1000);
         
         if(prob <= nacer){
-            return false;
+            return true;
         }
         else
         {
-            return true;
+            return false;
         }
     }
     
-    public boolean morir(int vivo)
+    public boolean morir(int morir)
     {
-        int prob = numeroAleatorio(1,1000);                           //Muerte por causas naturales
+        int prob = numeroAleatorio(1,1000);
         
-        if(prob <= vivo){
-            return false;
+        if(prob <= morir){
+            return true;
         }
         else
         {
-            return true;
+            return false;
         }
     }
     

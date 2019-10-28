@@ -5,6 +5,8 @@
  */
 package p3;
 
+import java.util.Comparator;
+
 /**
  *
  * @author moren
@@ -24,16 +26,17 @@ public class Foca extends SerVivo
         return masa;
     }
     
-    public boolean comer(int comer)
+    public int comer(int min, int max)
     {
-        int prob = numeroAleatorio(1,1000);                           //Muerte por causas naturales
+        int prob = numeroAleatorio(min,max);                           //Muerte por causas naturales
         
-        if(prob <= comer){
-            return false;
-        }
-        else
-        {
-            return true;
-        }
+        return prob;
     }
+    
+    public static Comparator<Foca> comparador = new Comparator<Foca>() {
+        @Override
+        public int compare(Foca f, Foca f1) {
+            return (f.getMasa() - f1.getMasa());
+        }
+    };
 }

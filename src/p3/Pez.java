@@ -5,6 +5,8 @@
  */
 package p3;
 
+import java.util.Comparator;
+
 /**
  *
  * @author moren
@@ -12,11 +14,26 @@ package p3;
 public class Pez extends SerVivo
 {
     private int masa;
+    private int num;
+    private String tipo = "";
     
     public Pez(int diaNacimiento, int masa) 
     {
         super(diaNacimiento);
         this.masa = masa;
+        num = numeroAleatorio(1,100);
+        if(num < 33)
+        {
+            tipo = "bacalao";
+        }
+        else if(num > 33 && num < 66)
+        {
+            tipo = "raya";
+        }
+        else
+        {
+            tipo = "merluza negra";
+        }
     }
     
     public int getMasa()
@@ -24,17 +41,29 @@ public class Pez extends SerVivo
         return masa;
     }
     
-    
-    public boolean comer(int comer)
+    public void setTipo(String tipo)
     {
-        int prob = numeroAleatorio(1,1000);                           //Muerte por causas naturales
-        
-        if(prob <= comer){
-            return false;
-        }
-        else
-        {
-            return true;
-        }
+        this.tipo = tipo;
     }
+    
+    public String geTipo()
+    {
+        return tipo;
+    }
+    
+    public int comer(int min, int max)
+    {
+        int prob = numeroAleatorio(min,max);                           //Muerte por causas naturales
+        
+        return prob;
+    }
+    
+    public static Comparator<Pez> comparador = new Comparator<Pez>() 
+    {
+        @Override
+        public int compare(Pez p, Pez p1) {
+            return (p.getMasa() - p1.getMasa());
+        }
+    };
+    
 }

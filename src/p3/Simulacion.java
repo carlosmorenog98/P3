@@ -27,12 +27,12 @@ public class Simulacion implements Serializable
     private final ArrayList<Krill_Plancton> krill_plancton = new ArrayList<>();
     
     public Simulacion()
-    {;}
+    {}
 
     public void crearEntorno()
     {
         dia = 0;
-        temperatura = 20;
+        temperatura = 4;
         esquimales.clear();
         osos.clear();
         morsas.clear();
@@ -49,153 +49,285 @@ public class Simulacion implements Serializable
         }
         
         //Creamos todos los osos polares
-        num = this.numeroAleatorio(12, 14);
+        num = this.numeroAleatorio(22, 28);
         for(int i = 0; i < num; i++)
         {
-            Esquimal e = new Esquimal(dia, numeroAleatorio(35,48));
-            esquimales.add(e);
+            OsoPolar op = new OsoPolar(dia, numeroAleatorio(40,55));
+            osos.add(op);
         }
         
         //Creamos todas las morsas
-        num = this.numeroAleatorio(12, 14);
+        num = this.numeroAleatorio(42, 48);
         for(int i = 0; i < num; i++)
         {
-            Esquimal e = new Esquimal(dia, numeroAleatorio(35,48));
-            esquimales.add(e);
+            Morsa m = new Morsa(dia, numeroAleatorio(30,42));
+            morsas.add(m);
         }
         
         //Creamos todas las focas
-        num = this.numeroAleatorio(12, 14);
+        num = this.numeroAleatorio(260, 290);
         for(int i = 0; i < num; i++)
         {
-            Esquimal e = new Esquimal(dia, numeroAleatorio(35,48));
-            esquimales.add(e);
+            Foca f = new Foca(dia, numeroAleatorio(25,32));
+            focas.add(f);
         }
         
         //Creamos todos los peces
-        num = this.numeroAleatorio(12, 14);
+        num = this.numeroAleatorio(7000, 8000);
         for(int i = 0; i < num; i++)
         {
-            Esquimal e = new Esquimal(dia, numeroAleatorio(35,48));
-            esquimales.add(e);
+            Pez p = new Pez(dia, numeroAleatorio(55,70));
+            peces.add(p);
         }
         
         //Creamos todos los krill y Plancton
-        num = this.numeroAleatorio(12, 14);
-        for(int i = 0; i < num; i++)
+        num = this.numeroAleatorio(65, 75);
+        long valor = num * 1000000000; 
+        for(int i = 0; i < valor; i++)
         {
-            Esquimal e = new Esquimal(dia, numeroAleatorio(35,48));
-            esquimales.add(e);
+            Krill_Plancton kp = new Krill_Plancton(dia);
+            krill_plancton.add(kp);
         }
         
+        Collections.sort(esquimales,Esquimal.comparador);
+        Collections.sort(osos,OsoPolar.comparador);
+        Collections.sort(morsas,Morsa.comparador);
+        Collections.sort(focas,Foca.comparador);
+        Collections.sort(peces,Pez.comparador);
     }
     /**
      * Todo lo que pasa en 1 dia
      */
-    private void eventosDia(){
-        cambioTemperaturaDiaria();                                              //cambio temperatura
-        eventosHumanoides();                                                    //humanos (reproduccion y muerte) cazavampiros(caza);   Modular
-        eventosMonstruosos();
+    private void eventosDia()
+    {
+        this.cambioTemperaturaDiaria();
+        this.eventosSeresVivos();
     }
     
     /**
-     * Eventos que pasan cada dia protagonizados por los seres humanos
+     * Eventos que pasan cada dia protagonizados por los seres vivos
      */
-    private void eventosHumanoides() {
-
-        ListIterator it = humanos.listIterator();
-        while(it.hasNext()){
-            SerHumanoide h = (SerHumanoide) it.next();
-            int hijos = h.reproduccion(temperatura);
-            if(h.muerte()){
-                //humanos.remove(h);
+    private void eventosSeresVivos() 
+    {
+        this.eventosEsquimales();
+        this.eventosOsos();
+        this.eventosMorsas();
+        this.eventosFocas();
+        this.eventosPeces();
+        this.eventosKrillPlancton();
+    }
+    
+    private void eventosEsquimales()
+    {
+        //Acciones Realizadas por los Esquimales
+        ListIterator it = esquimales.listIterator();
+        while(it.hasNext())
+        {
+            Esquimal e = (Esquimal) it.next();
+            
+            int comer1 = e.comer(2,4);
+            int comer2 = e.comer(0,1);
+            
+            for(int i = 0; i < comer1; i++)
+            {
+                peces.remove(i);
+            }
+            for(int i = 0; i < comer2; i++)
+            {
+                focas.remove(i);
+            }
+            
+            boolean hijos = e.reproducirse(32);
+            if(hijos = true)
+            {
+               it.add(new Esquimal(dia, numeroAleatorio(35,48)));
+            }
+            
+            if(e.morir(24))
+            {
                it.remove();
             }
-            for(int i = 0; i < hijos; i++){
-               //humanos.add(new SerHumanoide(h.getVelocidad(),dia));
-               it.add(new SerHumanoide(h.getVelocidad(),dia));
-            }
-            
         }
-        
-        it = cazavampiros.listIterator();
-        while(it.hasNext()){
-            CazaVampiro c = (CazaVampiro) it.next();
-            int hijos = c.reproduccion(temperatura); 
-            if(c.muerte()){
-                //cazavampiros.remove(c);
-                it.remove();
-            }
-            for(int i = 0; i < hijos; i++){
-                //cazavampiros.add(new CazaVampiro(c.getVelocidad(),dia));
-                it.add(new CazaVampiro(c.getVelocidad(),dia));
-            }
-            
-            if(vampiros.size()>0){
-                int pro = numeroAleatorio(1,3);
-                if( pro == 1){
-                    vampiros.remove(numeroAleatorio(0,vampiros.size()-1));
-                    c.addAsesinato();
-                }
-            }
-        }
-        
-        Collections.sort(humanos,SerHumanoide.comparador);
-        Collections.sort(cazavampiros,SerHumanoide.comparador);
+        Collections.sort(esquimales,Esquimal.comparador);
+        Collections.sort(peces,Pez.comparador);
+        Collections.sort(focas,Foca.comparador);
     }
     
-    /**
-     * Eventos que pasan cada dia protagonizados por los seres monstruosos
-     */
-    private void eventosMonstruosos() {
-        
-        ListIterator it = vampiros.listIterator();
-        while(it.hasNext()){
-            Vampiro v = (Vampiro) it.next();
-            if(v.accion()){                                                     //si el vampiro tiene hambre
-                if(humanos.size() > 0){                                             //si existen humanos
-                    humanos.remove(numeroAleatorio(0,humanos.size()-1));                  //un humano muere o es convertido
-                    if(v.accion()){                                                     //si el humano sobrevive
-                        //vampiros.add(new Vampiro (dia));                                //se añade un nuevo vampiro
-                        it.add(new Vampiro (dia));  
-                        v.addConvertido();      
-                    }
-                }else{                                                              //si no existe humanos
-                    //vampiros.remove(v);                                                 //vampiro muere inanicion
-                    it.remove();
-                }               
+    private void eventosOsos()
+    {
+        //Acciones Realizadas por los Osos
+        ListIterator it = osos.listIterator();
+        while(it.hasNext())
+        {
+            OsoPolar o = (OsoPolar) it.next();
+            
+            int comer1 = o.comer(1,2);
+            int comer2 = o.comer(10,15);
+            
+            for(int i = 0; i < comer1; i++)
+            {
+                focas.remove(i);
+            }
+            for(int i = 0; i < comer2; i++)
+            {
+                peces.remove(i);
+            }
+            
+            boolean hijos = o.reproducirse(153);
+            if(hijos = true)
+            {
+               it.add(new OsoPolar(dia, numeroAleatorio(40,55)));
+            }
+            
+            if(o.morir(95))
+            {
+               it.remove();
             }
         }
-
-
-        //zombies (probabilodad de convertir, muerte de zombie)
-        it = zombies.listIterator();
-        while(it.hasNext()){
-            Zombie z = (Zombie) it.next();
+        Collections.sort(osos,OsoPolar.comparador);
+        Collections.sort(focas,Foca.comparador);
+        Collections.sort(peces,Pez.comparador);
+    }
+    
+    private void eventosMorsas()
+    {
+        //Acciones Realizadas por las Morsas
+        ListIterator it = morsas.listIterator();
+        while(it.hasNext())
+        {
+            Morsa m = (Morsa) it.next();
             
-            if(z.muerte(dia)){
-                //zombies.remove(z);
-                it.remove();
+            int comer1 = m.comer(1,2);
+            int comer2 = m.comer(0,2);
+            
+            for(int i = 0; i < comer1; i++)
+            {
+                focas.remove(i);
             }
-            
-            if(z.convierte(probabilidadZombie)){
-                //eliminar humano mas lento
-                if(numeroAleatorio(1,2) == 1){                                      //elimina humano
-                    if(humanos.size()>0){
-                        humanos.remove(0);
-                    }
-                    
-                }else{                                                              //elimina cazavampiros
-                    if(cazavampiros.size()>0){
-                        cazavampiros.remove(0);
-                    }
+            if(comer2 != 0)
+            {
+                for(int i = 0; i < comer2; i++)
+                {
+                    osos.remove(i);
                 }
-                z.addConvertido();
-                //zombies.add(new Zombie(dia));
-                it.add(new Zombie(dia));
-                
+            }            
+            
+            boolean hijos = m.reproducirse(98);
+            if(hijos = true)
+            {
+               it.add(new Morsa(dia, numeroAleatorio(30,42)));
             }
             
+            if(m.morir(95))
+            {
+               it.remove();
+            }
+        }
+        Collections.sort(morsas,Morsa.comparador);
+        Collections.sort(focas,Foca.comparador);
+        Collections.sort(osos,OsoPolar.comparador);
+    }
+    
+    private void eventosFocas()
+    {
+        //Acciones Realizadas por las Focas
+        ListIterator it = focas.listIterator();
+        while(it.hasNext())
+        {
+            Foca f = (Foca) it.next();
+            
+            int comer = f.comer(15,20);
+            
+            for(int i = 0; i < comer; i++)
+            {
+                peces.remove(i);
+            }           
+            
+            boolean hijos = f.reproducirse(100);
+            if(hijos = true)
+            {
+               it.add(new Foca(dia, numeroAleatorio(25,32)));
+            }
+            
+            if(f.morir(90))
+            {
+               it.remove();
+            }
+        }
+        Collections.sort(focas,Foca.comparador);
+        Collections.sort(peces,Pez.comparador);
+    }
+    
+    private void eventosPeces()
+    {
+        //Acciones Realizadas por los peces
+        ListIterator it = peces.listIterator();
+        while(it.hasNext())
+        {
+            Pez p = (Pez) it.next();
+            
+            int comer = p.comer(1,2);
+            long num2 = comer * 1000000000;
+            
+            for(int i = 0; i < num2; i++)
+            {
+                krill_plancton.remove(i);
+            }           
+            
+            boolean hijos = p.reproducirse(185);
+            if(hijos = true)
+            {
+               Pez p2 = new Pez(dia, numeroAleatorio(55,70));
+               p2.setTipo(p.geTipo());
+               it.add(p2);
+            }
+            
+            if(p.morir(163))
+            {
+               it.remove();
+            }
+        }
+        Collections.sort(peces,Pez.comparador);
+    }
+    
+    private void eventosKrillPlancton()
+    {
+        //Acciones Realizadas por el krill y el plancton
+        ListIterator it = krill_plancton.listIterator();
+        while(it.hasNext())
+        {
+            Krill_Plancton kp = (Krill_Plancton) it.next();
+            
+            if(temperatura >= 5.5 || temperatura < 3)
+            {
+            }
+            else if(temperatura > 3 && temperatura < 4)
+            {
+                long num2 = 18 * 1000000000;
+                for(int i = 0; i < num2; i++)
+                {
+                    Krill_Plancton kp2 = new Krill_Plancton(dia);
+                    it.add(kp2);
+                }
+            }
+            else if(temperatura > 4 && temperatura < 5)
+            {
+                long num2 = 22 * 1000000000;
+                for(int i = 0; i < num2; i++)
+                {
+                    Krill_Plancton kp2 = new Krill_Plancton(dia);
+                    it.add(kp2);
+                }
+            }
+            else if(temperatura > 5 && temperatura < 5.5)
+            {
+                long num2 = 12 * 1000000000;
+                for(int i = 0; i < num2; i++)
+                {
+                    Krill_Plancton kp2 = new Krill_Plancton(dia);
+                    it.add(kp2);
+                }
+            }
         }
     }
     
@@ -222,99 +354,63 @@ public class Simulacion implements Serializable
     }
     
     /**
-     * Funcion que genera seres y los añade a la lista de estos 
-     * @param i cantidad de seres a generar
-     * @param ser el ser que va ha ser generado
-     */
-    private void generarSer(int i, char ser){
-        switch(ser){
-            case 'H':
-                for(int j = 0; j < i; j++){
-                    SerHumanoide h = new SerHumanoide(numeroAleatorio(60,100),dia);
-                    humanos.add(h);
-                }
-                break;
-            case 'C':
-                for(int j = 0; j < i; j++){
-                    CazaVampiro cv = new CazaVampiro(numeroAleatorio(60,100),dia);
-                    cazavampiros.add(cv);
-                }
-                break;
-            case 'V':
-                for(int j = 0; j < i; j++){
-                    Vampiro v = new Vampiro(dia);
-                    vampiros.add(v);
-                }
-                break;
-                
-            case 'Z':
-                for(int j = 0; j < i; j++){
-                    Zombie z = new Zombie(dia);
-                    zombies.add(z);
-                }
-                break;    
-            default:
-                System.out.println("No se ha encontrado el ser");
-                System.exit(0);
-        }
-    }
-    
-    /**
      * Funcion toString sobrecargada
      * @return Como se debe mostrar la clase simulacion
      */
     @Override
     public String toString() {
-        return "Dia: " + dia + "\nTemperatura = " + temperatura + "\nHumanos = " + humanos.size() + "\nVampiros = " + vampiros.size() + "\nCazavampiros = " + cazavampiros.size() + "\nZombies = " + zombies.size();
+        return "Dia: " + dia + "\nTemperatura: " + temperatura + "\nEsquimales: " + esquimales.size() + "\nOsos Polares: " + osos.size() + "\nMorsas: " + morsas.size() + "\nFocas: " + focas.size() + "\nPeces: " + peces.size() + "\nKrill y Plancton: " + krill_plancton.size();
     }
     
     /**
      * Funcion que calcula la variacion de la temperatura cada dia
      */
-    private void cambioTemperaturaDiaria() {
+    private void cambioTemperaturaDiaria() 
+    {
         int prob = numeroAleatorio(1,100);
         
-        if(temperatura>= 22){                                       //Temperatura Mayor o igual a 22 grados
-            if(prob<45){
-                cambioTemperatura((float) 0.5);                              //Probabilidad de subir medio grado: 45 %
-            }else{
-                cambioTemperatura((float) -0.5);                             //Probabilidad de bajar medio grado: 55 %
+        if(temperatura >= 5)
+        {
+            if(prob<45)
+            {
+                temperatura += 0.2;
             }
-        }else if (temperatura > 18 && temperatura < 22){            //Temperatura Menor a 22 y mayor a 18 grados
-            if(prob < 5){
-                //cambioGlobal(0); NO VARIA LA TEMPERATURA              //Probabilidad de no variar su temperatura: 5 %
-            }else if(prob < 35){
-                cambioTemperatura((float) -0.5);                             //Probabilidad de bajar medio grado: 30 %
-            }else{
-                cambioTemperatura((float) 0.5);                              //Probabilidad de subir medio grado: 65 %
+            else
+            {
+                temperatura -= 0.2;
             }
-        }else{
-            if(prob<45){                                            //Temperatura Menor o igual a 18 grados 
-                cambioTemperatura((float) -0.5);                             //Probabilidad de bajar medio grado: 45 %
-            }else{
-                cambioTemperatura((float) 0.5);                              //Probabilidad de subir medio grado: 55 %
+        }
+        else if (temperatura < 5 && temperatura > 3)
+        {
+            if(prob < 5)
+            {
+                temperatura = temperatura; //no se modifique
+            }
+            else if(prob < 30)
+            {
+                temperatura -= 0.2;      
+            }
+            else
+            {
+                temperatura += 0.2;
+            }
+        }
+        else if(temperatura <= 3)
+        {
+            if(prob<45)
+            { 
+                temperatura -= 0.2;
+            }
+            else
+            {
+                temperatura += 0.2;
             }
         }
     }
-
-    /**
-     * Funcion que cambia la probabilidad de convertir humanos a zombies
-     */
-    public void invasionZombie() {
-        probabilidadZombie = 3;
-    }
-    
-    /**
-     * Funcion que permite cambiar la temperatura (Pensado para calentamiento y enfriamiento global)
-     * @param t la temperatura que se le va a sumar a la temperatura actual
-     */
-    public void cambioTemperatura(float t){
-        temperatura = temperatura + t;
-    }
-    
+    /*
     public String mostrarDetalles(){
         String s = "";
-        s = s + "HUMANOS:\n------------\n";
+        s += "HUMANOS:\n------------\n";
         for(SerHumanoide h: humanos){
             s = s + h.toString();
         }
@@ -333,5 +429,6 @@ public class Simulacion implements Serializable
         s = s +  "\nNumero de zombies = " + zombies.size();
         return s;
     }
+    */
 
 }

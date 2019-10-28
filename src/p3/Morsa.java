@@ -5,6 +5,8 @@
  */
 package p3;
 
+import java.util.Comparator;
+
 /**
  *
  * @author moren
@@ -25,16 +27,18 @@ public class Morsa extends SerVivo
     }
     
     
-    public boolean comer(int comer)
+    public int comer(int min, int max)
     {
-        int prob = numeroAleatorio(1,1000);                           //Muerte por causas naturales
+        int prob = numeroAleatorio(min,max);                           //Muerte por causas naturales
         
-        if(prob <= comer){
-            return false;
-        }
-        else
-        {
-            return true;
-        }
+        return prob;
     }
+    
+    public static Comparator<Morsa> comparador = new Comparator<Morsa>() {
+        @Override
+        public int compare(Morsa m, Morsa m1) {
+            return (m.getMasa() - m1.getMasa());
+        }
+    };
+    
 }
