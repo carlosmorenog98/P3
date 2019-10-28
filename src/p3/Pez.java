@@ -11,10 +11,19 @@ package p3;
  */
 public class Pez extends SerVivo
 {
-    public Pez(int diaNacimiento) 
+    private int masa;
+    
+    public Pez(int diaNacimiento, int masa) 
     {
         super(diaNacimiento);
+        this.masa = masa;
     }
+    
+    public int getMasa()
+    {
+        return masa;
+    }
+    
     
     public boolean comer(int comer)
     {

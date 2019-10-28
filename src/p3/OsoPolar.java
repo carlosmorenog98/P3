@@ -11,10 +11,19 @@ package p3;
  */
 public class OsoPolar extends SerVivo
 {
-    public OsoPolar(int diaNacimiento) 
+    private int masa;
+    
+    public OsoPolar(int diaNacimiento, int masa) 
     {
         super(diaNacimiento);
+        this.masa = masa;
     }
+    
+    public int getMasa()
+    {
+        return masa;
+    }
+    
     
     public boolean comer(int comer)
     {

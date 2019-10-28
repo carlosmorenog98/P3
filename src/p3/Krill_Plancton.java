@@ -15,7 +15,7 @@ public class Krill_Plancton extends SerVivo
     {
         super(diaNacimiento);
     }
-    
+
     public boolean comer(int comer)
     {
         int prob = numeroAleatorio(1,1000);                           //Muerte por causas naturales

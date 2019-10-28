@@ -11,10 +11,19 @@ package p3;
  */
 public class Morsa extends SerVivo
 {
-    public Morsa(int diaNacimiento) 
+    private int masa;
+    
+    public Morsa(int diaNacimiento, int masa) 
     {
         super(diaNacimiento);
+        this.masa = masa;
     }
+    
+    public int getMasa()
+    {
+        return masa;
+    }
+    
     
     public boolean comer(int comer)
     {
