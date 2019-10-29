@@ -41,7 +41,7 @@ public class Simulacion implements Serializable
         focas.clear();
         peces.clear();
         krill_plancton.clear();
-        
+        System.out.println("Creamos los esquimales");
         //Creamos todos los esquimales
         num = this.numeroAleatorio(12, 14);
         for(int i = 0; i < num; i++)
@@ -50,6 +50,7 @@ public class Simulacion implements Serializable
             esquimales.add(e);
         }
         
+        System.out.println("Creamos los osos");
         //Creamos todos los osos polares
         num = this.numeroAleatorio(22, 28);
         for(int i = 0; i < num; i++)
@@ -58,6 +59,7 @@ public class Simulacion implements Serializable
             osos.add(op);
         }
         
+        System.out.println("Creamos las morsas");
         //Creamos todas las morsas
         num = this.numeroAleatorio(42, 48);
         for(int i = 0; i < num; i++)
@@ -66,6 +68,7 @@ public class Simulacion implements Serializable
             morsas.add(m);
         }
         
+        System.out.println("Creamos las focas");
         //Creamos todas las focas
         num = this.numeroAleatorio(260, 290);
         for(int i = 0; i < num; i++)
@@ -74,6 +77,7 @@ public class Simulacion implements Serializable
             focas.add(f);
         }
         
+        System.out.println("Creamos los peces");
         //Creamos todos los peces
         num = this.numeroAleatorio(7000, 8000);
         for(int i = 0; i < num; i++)
@@ -82,6 +86,7 @@ public class Simulacion implements Serializable
             peces.add(p);
         }
         
+        System.out.println("Krill");
         //Creamos todos los krill y Plancton
         num = this.numeroAleatorio(65, 75);
         long valor = num * 1000000000; 
@@ -90,7 +95,7 @@ public class Simulacion implements Serializable
             Krill_Plancton kp = new Krill_Plancton(dia);
             krill_plancton.add(kp);
         }
-        
+        System.out.println("Ordenamos los vectores");
         Collections.sort(esquimales,Esquimal.comparador);
         Collections.sort(osos,OsoPolar.comparador);
         Collections.sort(morsas,Morsa.comparador);
@@ -112,11 +117,17 @@ public class Simulacion implements Serializable
     private void eventosSeresVivos(boolean buques) 
     {
         this.eventosEsquimales();
+        System.out.println("aqui no peta");
         this.eventosOsos(buques);
+        System.out.println("aqui tampoco");
         this.eventosMorsas(buques);
+        System.out.println("aqui menos");
         this.eventosFocas();
+        System.out.println("en focas tampoco");
         this.eventosPeces();
+        System.out.println("en peces menos");
         this.eventosKrillPlancton();
+        System.out.println("en krill ya ni te digo");
     }
     
     private void eventosEsquimales()
@@ -549,6 +560,4 @@ public class Simulacion implements Serializable
     {
         return krill_plancton.size();
     }
-    
-    
 }
