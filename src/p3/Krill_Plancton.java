@@ -28,4 +28,11 @@ public class Krill_Plancton extends SerVivo
             return true;
         }
     }
+    
+    @Override
+    public String toString() 
+    {
+        return "Krill/Plancton -> Fecha de nacimiento: Día " + diaNacimiento + "\n";
+    }
+    
 }

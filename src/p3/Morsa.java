@@ -34,6 +34,12 @@ public class Morsa extends SerVivo
         return prob;
     }
     
+    @Override
+    public String toString() 
+    {
+        return "Morsa -> Fecha de nacimiento: Día " + diaNacimiento + ", Masa Muscular:" + masa + "\n";
+    }
+    
     public static Comparator<Morsa> comparador = new Comparator<Morsa>() {
         @Override
         public int compare(Morsa m, Morsa m1) {

@@ -58,6 +58,12 @@ public class Pez extends SerVivo
         return prob;
     }
     
+    @Override
+    public String toString() 
+    {
+        return "Pez -> Fecha de nacimiento: Día " + diaNacimiento + ", Masa Muscular:" + masa + "\nTipo: " + tipo + "\n";
+    }
+    
     public static Comparator<Pez> comparador = new Comparator<Pez>() 
     {
         @Override

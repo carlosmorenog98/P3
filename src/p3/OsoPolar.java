@@ -34,6 +34,12 @@ public class OsoPolar extends SerVivo
         return prob;
     }
     
+    @Override
+    public String toString() 
+    {
+        return "Oso Polar -> Fecha de nacimiento: Día " + diaNacimiento + ", Masa Muscular:" + masa + "\n";
+    }
+    
     public static Comparator<OsoPolar> comparador = new Comparator<OsoPolar>() {
         @Override
         public int compare(OsoPolar o, OsoPolar o1) {

@@ -33,6 +33,12 @@ public class Foca extends SerVivo
         return prob;
     }
     
+    @Override
+    public String toString() 
+    {
+        return "Foca -> Fecha de nacimiento: Día " + diaNacimiento + ", Masa Muscular:" + masa + "\n";
+    }
+    
     public static Comparator<Foca> comparador = new Comparator<Foca>() {
         @Override
         public int compare(Foca f, Foca f1) {

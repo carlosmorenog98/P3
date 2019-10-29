@@ -33,6 +33,12 @@ public class Esquimal extends SerVivo
         return prob;
     }
     
+    @Override
+    public String toString() 
+    {
+        return "Esquimal -> Fecha de nacimiento: Día " + diaNacimiento + ", Masa Muscular:" + masa + "\n";
+    }
+    
     public static Comparator<Esquimal> comparador = new Comparator<Esquimal>() {
         @Override
         public int compare(Esquimal e, Esquimal e1) {

@@ -16,6 +16,8 @@ import java.util.ListIterator;
 
 public class Simulacion implements Serializable
 {
+    private boolean buques = false;
+    private boolean calentamiento = false;
     private int num;
     private int dia;
     private float temperatura;
@@ -98,20 +100,20 @@ public class Simulacion implements Serializable
     /**
      * Todo lo que pasa en 1 dia
      */
-    private void eventosDia()
+    private void eventosDia(boolean buques)
     {
         this.cambioTemperaturaDiaria();
-        this.eventosSeresVivos();
+        this.eventosSeresVivos(buques);
     }
     
     /**
      * Eventos que pasan cada dia protagonizados por los seres vivos
      */
-    private void eventosSeresVivos() 
+    private void eventosSeresVivos(boolean buques) 
     {
         this.eventosEsquimales();
-        this.eventosOsos();
-        this.eventosMorsas();
+        this.eventosOsos(buques);
+        this.eventosMorsas(buques);
         this.eventosFocas();
         this.eventosPeces();
         this.eventosKrillPlancton();
@@ -140,12 +142,12 @@ public class Simulacion implements Serializable
             boolean hijos = e.reproducirse(32);
             if(hijos = true)
             {
-               it.add(new Esquimal(dia, numeroAleatorio(35,48)));
+               esquimales.add(new Esquimal(dia, numeroAleatorio(35,48)));
             }
             
             if(e.morir(24))
             {
-               it.remove();
+               esquimales.remove(0);
             }
         }
         Collections.sort(esquimales,Esquimal.comparador);
@@ -153,7 +155,7 @@ public class Simulacion implements Serializable
         Collections.sort(focas,Foca.comparador);
     }
     
-    private void eventosOsos()
+    private void eventosOsos(boolean buques)
     {
         //Acciones Realizadas por los Osos
         ListIterator it = osos.listIterator();
@@ -176,12 +178,21 @@ public class Simulacion implements Serializable
             boolean hijos = o.reproducirse(153);
             if(hijos = true)
             {
-               it.add(new OsoPolar(dia, numeroAleatorio(40,55)));
+               osos.add(new OsoPolar(dia, numeroAleatorio(40,55)));
             }
-            
-            if(o.morir(95))
+            if(buques == false)
             {
-               it.remove();
+                if(o.morir(95))
+                {
+                   osos.remove(0);
+                }
+            }
+            else
+            {
+                if(o.morir(150))
+                {
+                    osos.remove(0);
+                }
             }
         }
         Collections.sort(osos,OsoPolar.comparador);
@@ -189,7 +200,7 @@ public class Simulacion implements Serializable
         Collections.sort(peces,Pez.comparador);
     }
     
-    private void eventosMorsas()
+    private void eventosMorsas(boolean buques)
     {
         //Acciones Realizadas por las Morsas
         ListIterator it = morsas.listIterator();
@@ -215,12 +226,22 @@ public class Simulacion implements Serializable
             boolean hijos = m.reproducirse(98);
             if(hijos = true)
             {
-               it.add(new Morsa(dia, numeroAleatorio(30,42)));
+               morsas.add(new Morsa(dia, numeroAleatorio(30,42)));
             }
             
-            if(m.morir(95))
+            if(buques == false)
             {
-               it.remove();
+                if(m.morir(95))
+                {
+                   morsas.remove(0);
+                }
+            }
+            else
+            {
+                if(m.morir(200))
+                {
+                    morsas.remove(0);
+                }
             }
         }
         Collections.sort(morsas,Morsa.comparador);
@@ -246,12 +267,12 @@ public class Simulacion implements Serializable
             boolean hijos = f.reproducirse(100);
             if(hijos = true)
             {
-               it.add(new Foca(dia, numeroAleatorio(25,32)));
+               focas.add(new Foca(dia, numeroAleatorio(25,32)));
             }
             
             if(f.morir(90))
             {
-               it.remove();
+               focas.remove(0);
             }
         }
         Collections.sort(focas,Foca.comparador);
@@ -279,12 +300,12 @@ public class Simulacion implements Serializable
             {
                Pez p2 = new Pez(dia, numeroAleatorio(55,70));
                p2.setTipo(p.geTipo());
-               it.add(p2);
+               peces.add(p2);
             }
             
             if(p.morir(163))
             {
-               it.remove();
+               peces.remove(0);
             }
         }
         Collections.sort(peces,Pez.comparador);
@@ -307,7 +328,7 @@ public class Simulacion implements Serializable
                 for(int i = 0; i < num2; i++)
                 {
                     Krill_Plancton kp2 = new Krill_Plancton(dia);
-                    it.add(kp2);
+                    krill_plancton.add(kp2);
                 }
             }
             else if(temperatura > 4 && temperatura < 5)
@@ -316,7 +337,7 @@ public class Simulacion implements Serializable
                 for(int i = 0; i < num2; i++)
                 {
                     Krill_Plancton kp2 = new Krill_Plancton(dia);
-                    it.add(kp2);
+                    krill_plancton.add(kp2);
                 }
             }
             else if(temperatura > 5 && temperatura < 5.5)
@@ -325,7 +346,7 @@ public class Simulacion implements Serializable
                 for(int i = 0; i < num2; i++)
                 {
                     Krill_Plancton kp2 = new Krill_Plancton(dia);
-                    it.add(kp2);
+                    krill_plancton.add(kp2);
                 }
             }
         }
@@ -336,9 +357,12 @@ public class Simulacion implements Serializable
      * @param d cantidad de dias que deben pasar
      */
     public void transcurrirDia(int d){
+        calentamiento = false;
+        buques = false;
+        
         for(int i = 0; i < d; i++){
             dia++;
-            eventosDia();
+            eventosDia(buques);
         }
     }
     /**
@@ -407,28 +431,124 @@ public class Simulacion implements Serializable
             }
         }
     }
-    /*
-    public String mostrarDetalles(){
+    
+    public void calentamientoGlobal()
+    {
+        calentamiento = true;
+        temperatura += 2;
+        this.eventosDia(buques);
+    }
+    
+    public void buquesPescaMayor()
+    {
+        buques = true;
+        this.eventosDia(buques);
+    }
+    
+    public String mostrarDetalles()
+    {
+        int bacalao = 0, raya = 0, merluza = 0;
         String s = "";
-        s += "HUMANOS:\n------------\n";
-        for(SerHumanoide h: humanos){
-            s = s + h.toString();
+        s += "FECHA: " + dia + "\n";
+        s += "TEMPERATURA: " + temperatura + "\n--------------------------\n";
+        
+        if(calentamiento == true)
+        {
+            s += "Calentamiento Global.\n";
         }
-        s = s + "\nNumero de humanos = " + humanos.size() + "\nCAZA VAMPIROS:\n------------------------\n";
-        for(CazaVampiro cv: cazavampiros){
-            s = s + cv.toString();
+        else if(buques == true)
+        {
+            s += "Buques de pesca mayor.\n";
         }
-        s = s + "\nNumero de CazaVampiros = " + cazavampiros.size() + "\nVAMPIROS:\n----------------\n";
-        for(Vampiro v: vampiros){
-            s = s + v.toString();
+        
+        s += "Numero de Esquimales: " + esquimales.size() + "\n";
+        s += "Esquimales:\n";
+        for(Esquimal e: esquimales)
+        {
+            s += e.toString();
         }
-        s = s + "\nNumero de vampiros = " + vampiros.size() + "\nZOMBIES:\n-------------\n";
-        for(Zombie z: zombies){
-            s = s + z.toString();
-        }     
-        s = s +  "\nNumero de zombies = " + zombies.size();
+        
+        s += "Numero de Osos Polares: " + osos.size() + "\n";
+        s += "Osos Polares:\n";
+        for(OsoPolar o: osos)
+        {
+            s += o.toString();
+        }
+        
+        s += "Numero de Morsas: " + morsas.size() + "\n";
+        s += "Morsas:\n";
+        for(Morsa m: morsas)
+        {
+            s += m.toString();
+        }
+        
+        s += "Numero de Focas: " + focas.size() + "\n";
+        s += "Focas:\n";
+        for(Foca f: focas){
+            s += f.toString();
+        }
+        
+        s += "Numero de Peces: " + peces.size() + "\n";
+        s += "Peces:\n";
+        for(Pez p: peces){
+            s += p.toString();
+            if(p.geTipo().equals("bacalao"))
+            {
+                bacalao++;
+            }
+            else if(p.geTipo().equals("raya"))
+            {
+                raya++;
+            }
+            else if(p.geTipo().equals("merluza negra"))
+            {
+                merluza++;
+            }
+        }
+        s += "Peces de tipo Bacalao: " + bacalao + "\nPeces de tipo Raya: " + raya + "\nPeces de tipo Merluza Negra: " + merluza + "\n";
+        
+        s += "Numero de Krill y Plancton: " + krill_plancton.size() + "\n";
+        
         return s;
     }
-    */
-
+    
+    public int getDia()
+    {
+        return dia;
+    }
+    public float getTemperatura()
+    {
+        return temperatura;
+    }
+    public int getNumEsquimales()
+    {
+        return esquimales.size();
+    }
+    
+    public int getNumOsos()
+    {
+        return osos.size();
+    }
+    
+    public int getNumMorsas()
+    {
+        return morsas.size();
+    }
+    
+    public int getNumFocas()
+    {
+        return focas.size();
+    }
+    
+    public int getNumPeces()
+    {
+        return peces.size();
+    }
+    
+    public int getNumKrill()
+    {
+        return krill_plancton.size();
+    }
+    
+    
 }
