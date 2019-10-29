@@ -90,12 +90,15 @@ public class Simulacion implements Serializable
         //Creamos todos los krill y Plancton
         num = this.numeroAleatorio(65, 75);
         long valor = num * 1000000000; 
+        System.out.println(valor);
+        //Aqui peta y no pilla bien el numero
         for(int i = 0; i < valor; i++)
         {
             Krill_Plancton kp = new Krill_Plancton(dia);
             krill_plancton.add(kp);
         }
         System.out.println("Ordenamos los vectores");
+        System.out.println(krill_plancton.size());
         Collections.sort(esquimales,Esquimal.comparador);
         Collections.sort(osos,OsoPolar.comparador);
         Collections.sort(morsas,Morsa.comparador);
