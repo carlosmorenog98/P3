@@ -7,6 +7,7 @@ package p3;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.ConcurrentModificationException;
 import java.util.ListIterator;
 
 /**
@@ -110,6 +111,7 @@ public class Simulacion implements Serializable
      */
     private void eventosDia(boolean buques)
     {
+        System.out.println("Día: " + dia);
         this.cambioTemperaturaDiaria();
         this.eventosEsquimales();
         this.eventosOsos(buques);
@@ -121,47 +123,69 @@ public class Simulacion implements Serializable
     
     private void eventosEsquimales()
     {
+        ArrayList<Pez> peces2 = new ArrayList<>();
+        ArrayList<Esquimal> esquimales2 = new ArrayList<>();
         //Acciones Realizadas por los Esquimales
         ListIterator it = esquimales.listIterator();
         while(it.hasNext())
         {
+            boolean muerto = false;
             Esquimal e = (Esquimal) it.next();
             
             int comer1 = e.comer(2,4);
             int comer2 = e.comer(0,1);
             
-            for(int i = 0; i < comer1; i++)
+            if(peces.size() - comer1 >= 0)
             {
-                if(peces.size()!=0)
+                for(int i = 0; i < comer1; i++)
                 {
-                    peces.remove(i);
+                    peces2.add(peces.get(i));
                 }
             }
-            for(int i = 0; i < comer2; i++)
+            else
             {
-                if(focas.size()!=0)
+                peces2.addAll(peces);
+            }
+
+            if(focas.size() - comer2 >= 0)
+            {
+                for(int i = 0; i < comer2; i++)
                 {
                     focas.remove(i);
                 }
             }
-            
-            boolean hijos = e.reproducirse(32);
-            if(hijos = true)
+            else
             {
-                //Aqui peta por completo
-               it.add(new Esquimal(dia, numeroAleatorio(35,48)));
+                focas.removeAll(focas);
             }
             
             if(e.morir(24))
             {
                 //O aqui
                esquimales.remove(esquimales.listIterator(0));
+               muerto = true;
+            }
+            else if(!e.morir(24) && (peces.size() == 0 && focas.size() == 0))
+            {
+                muerto = true;
+                esquimales.remove(esquimales.listIterator(0));
+            }
+            if(muerto == false)
+            {
+                boolean hijos = e.reproducirse(32);
+                if(hijos = true)
+                {
+                    //Aqui peta por completo
+                   esquimales2.add(new Esquimal(dia, numeroAleatorio(35,48)));
+                }
             }
         }
-        System.out.println("Aqui no peta");
+        peces.removeAll(peces2);
+        esquimales.addAll(esquimales2);
         Collections.sort(esquimales,Esquimal.comparador);
         Collections.sort(peces,Pez.comparador);
         Collections.sort(focas,Foca.comparador);
+        System.out.println("Hola Esquimal");
     }
     
     private void eventosOsos(boolean buques)
@@ -176,25 +200,39 @@ public class Simulacion implements Serializable
             int comer1 = o.comer(1,2);
             int comer2 = o.comer(10,15);
             
-            for(int i = 0; i < comer1; i++)
+            if(focas.size() - comer1 >= 0)
             {
-                focas.remove(i);
+                for(int i = 0; i < comer1; i++)
+                {
+                    focas.remove(i);
+                }
             }
-            for(int i = 0; i < comer2; i++)
+            else
             {
-                peces.remove(i);
+                focas.removeAll(focas);
             }
             
-            boolean hijos = o.reproducirse(153);
-            if(hijos == true)
+            if(peces.size() - comer2 >= 0)
             {
-               osos2.add(new OsoPolar(dia, numeroAleatorio(40,55)));
+                for(int i = 0; i < comer2; i++)
+                {
+                    peces.remove(i);
+                }
             }
+            else
+            {
+                peces.removeAll(peces);
+            }
+            
             if(buques == false)
             {
                 if(o.morir(95))
                 {
                    osos.remove(osos.listIterator(0));
+                }
+                else if(!o.morir(95) && (focas.size() == 0 && peces.size() == 0))
+                {
+                    osos.remove(osos.listIterator(0));
                 }
             }
             else
@@ -203,13 +241,23 @@ public class Simulacion implements Serializable
                 {
                     osos.remove(osos.listIterator(0));
                 }
+                else if(!o.morir(150) && (focas.size() == 0 && peces.size() == 0))
+                {
+                    osos.remove(osos.listIterator(0));
+                }
+            }
+            
+            boolean hijos = o.reproducirse(153);
+            if(hijos == true)
+            {
+               osos2.add(new OsoPolar(dia, numeroAleatorio(40,55)));
             }
         }
         osos.addAll(osos2);
-        
         Collections.sort(osos,OsoPolar.comparador);
         Collections.sort(focas,Foca.comparador);
         Collections.sort(peces,Pez.comparador);
+        System.out.println("Hola Oso");
     }
     
     private void eventosMorsas(boolean buques)
@@ -217,54 +265,147 @@ public class Simulacion implements Serializable
         ArrayList<Morsa> morsas2 = new ArrayList<>();
         //Acciones Realizadas por las Morsas
         ListIterator it = morsas.listIterator();
-        /*
         while(it.hasNext())
         {
-            Morsa m = (Morsa) it.next();
+            boolean muerto = false;
+            try {
+                Morsa m = (Morsa) it.next();
             
-            int comer1 = m.comer(1,2);
-            int comer2 = m.comer(0,2);
-            
-            for(int i = 0; i < comer1; i++)
-            {
-                focas.remove(i);
-            }
-            if(comer2 != 0)
-            {
-                for(int i = 0; i < comer2; i++)
+                int comer1 = m.comer(1,2);
+                int comer2 = m.comer(0,2);
+
+                if(focas.size() - comer1 >= 0)
                 {
-                    osos.remove(i);
+                    for(int i = 0; i < comer1; i++)
+                    {
+                        focas.remove(i);
+                    }
                 }
-            }            
-            
-            boolean hijos = m.reproducirse(98);
-            if(hijos == true)
-            {
-               //morsas2.add(new Morsa(dia, numeroAleatorio(30,42)));
-            }
-            
-            if(buques == false)
-            {
-                if(m.morir(95))
+                else
                 {
-                   morsas.remove(morsas.listIterator(0));
+                    focas.removeAll(focas);
                 }
-            }
-            else
-            {
-                if(m.morir(200))
+                
+                if(comer2 != 0)
                 {
-                    morsas.remove(morsas.listIterator(0));
+                    if(osos.size() - comer2 >= 0)
+                    {
+                        for(int i = 0; i < comer2; i++)
+                        {
+                            osos.remove(i);
+                        }
+                    }
+                    else
+                    {
+                        osos.removeAll(osos);
+                    }
+                }            
+
+                if(buques == false)
+                {
+                    if(m.morir(95))
+                    {
+                       morsas.remove(morsas.listIterator(0));
+                       muerto = true;
+                    }
+                    else if(!m.morir(95) && (focas.size() == 0 && peces.size() == 0))
+                    {
+                        morsas.remove(morsas.listIterator(0));
+                        muerto = true;
+                    }
+                }
+                else
+                {
+                    if(m.morir(200))
+                    {
+                        morsas.remove(morsas.listIterator(0));
+                        muerto = true;
+                    }
+                    else if(!m.morir(200) && (focas.size() == 0 && osos.size() == 0))
+                    {
+                        morsas.remove(morsas.listIterator(0));
+                        muerto = true;
+                    }
+                }
+                if(muerto == false)
+                {
+                    boolean hijos = m.reproducirse(98);
+                    if(hijos == true)
+                    {
+                       morsas2.add(new Morsa(dia, numeroAleatorio(30,42)));
+                    }
+                }
+            } 
+            catch (ConcurrentModificationException e) 
+            {
+                it = morsas.listIterator(it.previousIndex());
+                Morsa m = (Morsa) it.next();
+            
+                int comer1 = m.comer(1,2);
+                int comer2 = m.comer(0,2);
+
+                if(focas.size() - comer1 >= 0)
+                {
+                    for(int i = 0; i < comer1; i++)
+                    {
+                        focas.remove(i);
+                    }
+                }
+                else
+                {
+                    focas.removeAll(focas);
+                }
+                
+                if(comer2 != 0)
+                {
+                    if(osos.size() - comer2 >= 0)
+                    {
+                        for(int i = 0; i < comer2; i++)
+                        {
+                            osos.remove(i);
+                        }
+                    }
+                    else
+                    {
+                        osos.removeAll(osos);
+                    }
+                }            
+
+                if(buques == false)
+                {
+                    if(m.morir(95))
+                    {
+                       morsas.remove(morsas.listIterator(0));
+                    }
+                    else if(!m.morir(24) && (focas.size() == 0 && osos.size() == 0))
+                    {
+                        morsas.remove(morsas.listIterator(0));
+                    }
+                }
+                else
+                {
+                    if(m.morir(200))
+                    {
+                        morsas.remove(morsas.listIterator(0));
+                    }
+                    else if(!m.morir(24) && (focas.size() == 0 && osos.size() == 0))
+                    {
+                        morsas.remove(morsas.listIterator(0));
+                    }
+                }
+                
+                boolean hijos = m.reproducirse(98);
+                if(hijos == true)
+                {
+                   morsas2.add(new Morsa(dia, numeroAleatorio(30,42)));
                 }
             }
-            System.out.println("Hola1");
         }
-        */
-        System.out.println("Hola2");
         morsas.addAll(morsas2);
         Collections.sort(morsas,Morsa.comparador);
         Collections.sort(focas,Foca.comparador);
         Collections.sort(osos,OsoPolar.comparador);
+        System.out.println("Hola Morsa");
     }
     
     private void eventosFocas()
@@ -283,97 +424,134 @@ public class Simulacion implements Serializable
                 peces.remove(i);
             }           
             
+            if(f.morir(90))
+            {
+               focas.remove(focas.listIterator(0));
+            }
+            else if(!f.morir(90) && (peces.size() == 0))
+            {
+                focas.remove(focas.listIterator(0));
+            }
+            
             boolean hijos = f.reproducirse(100);
             if(hijos == true)
             {
                focas2.add(new Foca(dia, numeroAleatorio(25,32)));
             }
-            
-            if(f.morir(90))
-            {
-               focas.remove(focas.listIterator(0));
-            }
         }
         focas.addAll(focas2);
         Collections.sort(focas,Foca.comparador);
         Collections.sort(peces,Pez.comparador);
+        System.out.println("Hola Foca");
     }
     
     private void eventosPeces()
     {
+        ArrayList<Krill_Plancton> krill2 = new ArrayList<>();
         ArrayList<Pez> peces2 = new ArrayList<>();
         //Acciones Realizadas por los peces
         ListIterator it = peces.listIterator();
         while(it.hasNext())
         {
-            Pez p = (Pez) it.next();
+            try {
+                Pez p = (Pez) it.next();
             
-            int comer = p.comer(1,2);
-            long num2 = comer/* * 1000000000*/;
+                int comer = p.comer(1,2);
+                long num2 = comer/* * 1000000000*/;
+
+                for(int i = 0; i < num2; i++)
+                {
+                    //System.out.println("Eliminado");
+                    krill2.add(krill_plancton.get(i));
+                }           
+
+                if(p.morir(163))
+                {
+                  peces.remove(peces.listIterator(0));
+                }
+                else if(!p.morir(163) && (krill_plancton.size() == 0))
+                {
+                    peces.remove(peces.listIterator(0));
+                }
+                
+                boolean hijos = p.reproducirse(185);
+                if(hijos == true)
+                {
+                   Pez p2 = new Pez(dia, numeroAleatorio(55,70));
+                   p2.setTipo(p.geTipo());
+                   peces2.add(p2);
+                }
+            } catch (ConcurrentModificationException e) {
+                it = peces.listIterator(it.previousIndex());
+                Pez p = (Pez) it.next();
             
-            for(int i = 0; i < num2; i++)
-            {
-                krill_plancton.remove(i);
-            }           
-            
-            boolean hijos = p.reproducirse(185);
-            if(hijos == true)
-            {
-               Pez p2 = new Pez(dia, numeroAleatorio(55,70));
-               p2.setTipo(p.geTipo());
-               peces2.add(p2);
+                int comer = p.comer(1,2);
+                long num2 = comer/* * 1000000000*/;
+
+                for(int i = 0; i < num2; i++)
+                {
+                    //System.out.println("Eliminado");
+                    krill2.add(krill_plancton.get(i));
+                }           
+
+                if(p.morir(163))
+                {
+                  peces.remove(peces.listIterator(0));
+                }
+                else if(!p.morir(163) && (krill_plancton.size() == 0))
+                {
+                    peces.remove(peces.listIterator(0));
+                }
+                
+                boolean hijos = p.reproducirse(185);
+                if(hijos == true)
+                {
+                   Pez p2 = new Pez(dia, numeroAleatorio(55,70));
+                   p2.setTipo(p.geTipo());
+                   peces2.add(p2);
+                }
             }
             
-            if(p.morir(163))
-            {
-              peces.remove(peces.listIterator(0));
-            }
         }
+        krill_plancton.removeAll(krill2);
         peces.addAll(peces2);
         Collections.sort(peces,Pez.comparador);
+        System.out.println("Hola Pez");
     }
     
     private void eventosKrillPlancton()
     {
-        ArrayList<Krill_Plancton> krillplancton2 = new ArrayList<>();
-        //Acciones Realizadas por el krill y el plancton
-        ListIterator it = krill_plancton.listIterator();
-        while(it.hasNext())
+        if(temperatura >= 5.5 || temperatura < 3)
         {
-            Krill_Plancton kp = (Krill_Plancton) it.next();
-            
-            if(temperatura >= 5.5 || temperatura < 3)
+        }
+        else if(temperatura > 3 && temperatura < 4)
+        {
+            long num2 = 18000 /** 1000000000*/;
+            for(int i = 0; i < num2; i++)
             {
-            }
-            else if(temperatura > 3 && temperatura < 4)
-            {
-                long num2 = 18 /** 1000000000*/;
-                for(int i = 0; i < num2; i++)
-                {
-                    Krill_Plancton kp2 = new Krill_Plancton(dia);
-                    krillplancton2.add(kp2);
-                }
-            }
-            else if(temperatura > 4 && temperatura < 5)
-            {
-                long num2 = 22/* * 1000000000*/;
-                for(int i = 0; i < num2; i++)
-                {
-                    Krill_Plancton kp2 = new Krill_Plancton(dia);
-                    krillplancton2.add(kp2);
-                }
-            }
-            else if(temperatura > 5 && temperatura < 5.5)
-            {
-                long num2 = 12 /* * 1000000000*/;
-                for(int i = 0; i < num2; i++)
-                {
-                    Krill_Plancton kp2 = new Krill_Plancton(dia);
-                    krillplancton2.add(kp2);
-                }
+                Krill_Plancton kp2 = new Krill_Plancton(dia);
+                krill_plancton.add(kp2);
             }
         }
-        krill_plancton.addAll(krillplancton2);
+        else if(temperatura > 4 && temperatura < 5)
+        {
+            long num2 = 22000/* * 1000000000*/;
+            for(int i = 0; i < num2; i++)
+            {
+                Krill_Plancton kp2 = new Krill_Plancton(dia);
+                krill_plancton.add(kp2);
+            }
+        }
+        else if(temperatura > 5 && temperatura < 5.5)
+        {
+            long num2 = 12000 /* * 1000000000*/;
+            for(int i = 0; i < num2; i++)
+            {
+                Krill_Plancton kp2 = new Krill_Plancton(dia);
+                krill_plancton.add(kp2);
+            }
+        }
+        System.out.println("Hola Krill");
     }
     
     /**
