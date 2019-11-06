@@ -30,6 +30,7 @@ public class Simulador extends javax.swing.JFrame
         s = new Simulacion();
         s.crearEntorno();
         labelDia.setText("" + s.getDia());
+        labelGrados.setText("" + s.getTemperatura());
         labelEsquimal.setText("" + s.getNumEsquimales());
         labelOso.setText("" + s.getNumOsos());
         labelMorsa.setText("" + s.getNumMorsas());
@@ -52,7 +53,6 @@ public class Simulador extends javax.swing.JFrame
         labelMorsa = new javax.swing.JLabel();
         labelOso = new javax.swing.JLabel();
         labelEsquimal = new javax.swing.JLabel();
-        labelDia = new javax.swing.JLabel();
         labelKrill = new javax.swing.JLabel();
         buttonSalir = new javax.swing.JButton();
         buttonAvanzar10 = new javax.swing.JButton();
@@ -61,7 +61,11 @@ public class Simulador extends javax.swing.JFrame
         buttonNuevoPolo = new javax.swing.JButton();
         buttonBuque = new javax.swing.JButton();
         buttonCalentamiento = new javax.swing.JButton();
+        labelgraficoºC = new javax.swing.JLabel();
+        jPanel8 = new javax.swing.JPanel();
+        labelGrados = new javax.swing.JLabel();
         jPanel7 = new javax.swing.JPanel();
+        labelDia = new javax.swing.JLabel();
         jPanel6 = new javax.swing.JPanel();
         jPanel5 = new javax.swing.JPanel();
         jPanel4 = new javax.swing.JPanel();
@@ -93,10 +97,6 @@ public class Simulador extends javax.swing.JFrame
         labelEsquimal.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
         labelEsquimal.setText("0");
         getContentPane().add(labelEsquimal, new org.netbeans.lib.awtextra.AbsoluteConstraints(480, 40, 130, 30));
-
-        labelDia.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
-        labelDia.setText("Día 0");
-        getContentPane().add(labelDia, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 20, 80, 30));
 
         labelKrill.setFont(new java.awt.Font("Tahoma", 1, 20)); // NOI18N
         labelKrill.setText("0");
@@ -172,20 +172,53 @@ public class Simulador extends javax.swing.JFrame
         });
         getContentPane().add(buttonCalentamiento, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 240, 220, 40));
 
+        labelgraficoºC.setFont(new java.awt.Font("Tahoma", 1, 36)); // NOI18N
+        labelgraficoºC.setText("ºC");
+        getContentPane().add(labelgraficoºC, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 10, -1, -1));
+
+        jPanel8.setBackground(new java.awt.Color(255, 255, 255));
+
+        labelGrados.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
+        labelGrados.setText("4");
+
+        javax.swing.GroupLayout jPanel8Layout = new javax.swing.GroupLayout(jPanel8);
+        jPanel8.setLayout(jPanel8Layout);
+        jPanel8Layout.setHorizontalGroup(
+            jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel8Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(labelGrados, javax.swing.GroupLayout.DEFAULT_SIZE, 116, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+        jPanel8Layout.setVerticalGroup(
+            jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(labelGrados, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 30, Short.MAX_VALUE)
+        );
+
+        getContentPane().add(jPanel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 20, 140, 30));
+
         jPanel7.setBackground(new java.awt.Color(255, 255, 255));
+
+        labelDia.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
+        labelDia.setText("0");
 
         javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
         jPanel7.setLayout(jPanel7Layout);
         jPanel7Layout.setHorizontalGroup(
             jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 150, Short.MAX_VALUE)
+            .addGroup(jPanel7Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(labelDia, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel7Layout.setVerticalGroup(
             jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 30, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel7Layout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(labelDia, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
-        getContentPane().add(jPanel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 20, 150, 30));
+        getContentPane().add(jPanel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 20, 60, 30));
 
         jPanel6.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -287,6 +320,7 @@ public class Simulador extends javax.swing.JFrame
         s = new Simulacion();
         s.crearEntorno();
         labelDia.setText("" + s.getDia());
+        labelGrados.setText("" + s.getTemperatura());
         labelEsquimal.setText("" + s.getNumEsquimales());
         labelOso.setText("" + s.getNumOsos());
         labelMorsa.setText("" + s.getNumMorsas());
@@ -298,6 +332,7 @@ public class Simulador extends javax.swing.JFrame
     private void buttonCalentamientoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonCalentamientoActionPerformed
         s.calentamientoGlobal();
         labelDia.setText("" + s.getDia());
+        labelGrados.setText("" + s.getTemperatura());
         labelEsquimal.setText("" + s.getNumEsquimales());
         labelOso.setText("" + s.getNumOsos());
         labelMorsa.setText("" + s.getNumMorsas());
@@ -309,6 +344,7 @@ public class Simulador extends javax.swing.JFrame
     private void buttonDiaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonDiaActionPerformed
         s.transcurrirDia(1);
         labelDia.setText("" + s.getDia());
+        labelGrados.setText("" + s.getTemperatura());
         labelEsquimal.setText("" + s.getNumEsquimales());
         labelOso.setText("" + s.getNumOsos());
         labelMorsa.setText("" + s.getNumMorsas());
@@ -318,8 +354,9 @@ public class Simulador extends javax.swing.JFrame
     }//GEN-LAST:event_buttonDiaActionPerformed
 
     private void buttonAvanzar10ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonAvanzar10ActionPerformed
-        s.transcurrirDia(1);
+        s.transcurrirDia(10);
         labelDia.setText("" + s.getDia());
+        labelGrados.setText("" + s.getTemperatura());
         labelEsquimal.setText("" + s.getNumEsquimales());
         labelOso.setText("" + s.getNumOsos());
         labelMorsa.setText("" + s.getNumMorsas());
@@ -337,6 +374,7 @@ public class Simulador extends javax.swing.JFrame
     private void buttonBuqueActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonBuqueActionPerformed
         s.buquesPescaMayor();
         labelDia.setText("" + s.getDia());
+        labelGrados.setText("" + s.getTemperatura());
         labelEsquimal.setText("" + s.getNumEsquimales());
         labelOso.setText("" + s.getNumOsos());
         labelMorsa.setText("" + s.getNumMorsas());
@@ -407,12 +445,15 @@ public class Simulador extends javax.swing.JFrame
     private javax.swing.JPanel jPanel5;
     private javax.swing.JPanel jPanel6;
     private javax.swing.JPanel jPanel7;
+    private javax.swing.JPanel jPanel8;
     private javax.swing.JLabel labelDia;
     private javax.swing.JLabel labelEsquimal;
     private javax.swing.JLabel labelFoca;
+    private javax.swing.JLabel labelGrados;
     private javax.swing.JLabel labelKrill;
     private javax.swing.JLabel labelMorsa;
     private javax.swing.JLabel labelOso;
     private javax.swing.JLabel labelPez;
+    private javax.swing.JLabel labelgraficoºC;
     // End of variables declaration//GEN-END:variables
 }
