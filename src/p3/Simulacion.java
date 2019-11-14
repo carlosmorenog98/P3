@@ -410,6 +410,7 @@ public class Simulacion implements Serializable
     
     private void eventosFocas()
     {
+        boolean muerto = false;
         ArrayList<Foca> focas2 = new ArrayList<>();
         //Acciones Realizadas por las Focas
         ListIterator it = focas.listIterator();
@@ -427,16 +428,21 @@ public class Simulacion implements Serializable
             if(f.morir(90))
             {
                focas.remove(focas.listIterator(0));
+               muerto = true;
             }
             else if(!f.morir(90) && (peces.size() == 0))
             {
                 focas.remove(focas.listIterator(0));
+                muerto = true;
             }
             
-            boolean hijos = f.reproducirse(100);
-            if(hijos == true)
+            if(muerto == false)
             {
-               focas2.add(new Foca(dia, numeroAleatorio(25,32)));
+                boolean hijos = f.reproducirse(100);
+                if(hijos == true)
+                {
+                   focas2.add(new Foca(dia, numeroAleatorio(25,32)));
+                }
             }
         }
         focas.addAll(focas2);
@@ -447,6 +453,7 @@ public class Simulacion implements Serializable
     
     private void eventosPeces()
     {
+        boolean muerto = false;
         ArrayList<Krill_Plancton> krill2 = new ArrayList<>();
         ArrayList<Pez> peces2 = new ArrayList<>();
         //Acciones Realizadas por los peces
@@ -497,18 +504,23 @@ public class Simulacion implements Serializable
                 if(p.morir(163))
                 {
                   peces.remove(peces.listIterator(0));
+                  muerto = true;
                 }
                 else if(!p.morir(163) && (krill_plancton.size() == 0))
                 {
                     peces.remove(peces.listIterator(0));
+                    muerto = true;
                 }
                 
-                boolean hijos = p.reproducirse(185);
-                if(hijos == true)
+                if(muerto == false)
                 {
-                   Pez p2 = new Pez(dia, numeroAleatorio(55,70));
-                   p2.setTipo(p.geTipo());
-                   peces2.add(p2);
+                    boolean hijos = p.reproducirse(185);
+                    if(hijos == true)
+                    {
+                       Pez p2 = new Pez(dia, numeroAleatorio(55,70));
+                       p2.setTipo(p.geTipo());
+                       peces2.add(p2);
+                    }
                 }
             }
             
