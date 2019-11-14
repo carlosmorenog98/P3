@@ -26,8 +26,8 @@ public class Simulador extends javax.swing.JFrame
         super("Simulador Ecosistema Polo Sur");
         initComponents();
         gd = new gestionarDatos();
-        //s = gd.cargarDatos();
-        s = new Simulacion();
+        s = gd.cargarDatos();
+        //s = new Simulacion();
         s.crearEntorno();
         labelDia.setText("" + s.getDia());
         labelGrados.setText("" + s.getTemperatura());

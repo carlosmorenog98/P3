@@ -35,14 +35,14 @@ public class MostrarDetalles extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setPreferredSize(new java.awt.Dimension(652, 486));
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
+        areaDetalles.setEditable(false);
         areaDetalles.setColumns(20);
         areaDetalles.setRows(5);
         jScrollPane1.setViewportView(areaDetalles);
 
-        getContentPane().add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, 630, 470));
+        getContentPane().add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, 630, 460));
 
         jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Archivos/copia3.png"))); // NOI18N
         getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
